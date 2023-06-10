@@ -7,16 +7,19 @@
 
 // Define a global client that can request services
 ros::ServiceClient client;
-
+bool bstop = false;
 // This function calls the command_robot service to drive the robot in the specified direction
 void drive_robot(float lin_x, float ang_z)
 {
+    
     ROS_INFO("INFO: drive_robot(%f, %f)\n", lin_x, ang_z);
+    if(!bstop){
     // TODO: Request a service and pass the velocities to it to drive the robot
     ball_chaser::DriveToTarget svc;
     svc.request.linear_x = lin_x;
     svc.request.angular_z = ang_z;
     client.call(svc);
+}
 }
 
 // This callback function continuously executes and reads the image data
@@ -56,16 +59,15 @@ void process_image_callback(const sensor_msgs::Image img)
 
     float lin_x = 0.0;
     float ang_z = 0.0;
-    int max_white = img.height * img.width * 0.85;
+    int max_white = img.height * img.width * 0.45;
     if(detected && total_white < max_white)
     {
-        ROS_INFO("%f\n", img.height * img.width * 0.1f / total_white);
-        float factor = std::min(0.5f, img.height * img.width * 0.1f / total_white);
-        switch((idx%img.width)/(img.width/3))
+        int column = (idx/nchanels)%img.width;
+        switch(column / (img.width/3))
         {
-        case 0: ang_z = +factor; break;
-        case 1: lin_x = +factor; break;
-        case 2: ang_z = -factor; break;
+        case 0: ang_z = +0.5; break;
+        case 1: lin_x = +0.5; break;
+        case 2: ang_z = -0.5; break;
         }
     }
 
