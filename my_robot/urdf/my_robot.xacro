@@ -189,4 +189,15 @@
     </visual>
 
   </link>
+
+  <gazebo reference="chassis">
+    <material>Gazebo/BlueLaser</material>
+  </gazebo>
+  <gazebo reference="right_wheel">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="left_wheel">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
 </robot>
